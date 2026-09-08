@@ -1,11 +1,10 @@
 package com.example.wanteat.dto;
 
-public record ShoppingItemResponse(
+public record IngredientResponse(
         Long id,
-        Long menuId,
         String name,
         String amount,
         String unit,
-        boolean checked,
+        boolean pantryStaple,
         Integer sortOrder) {
 }

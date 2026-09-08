@@ -24,6 +24,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400).body(new ErrorResponse(400, e.getMessage()));
     }
 
+    @ExceptionHandler(AiGenerationException.class)
+    public ResponseEntity<ErrorResponse> handleAiGeneration(AiGenerationException e) {
+        log.warn("AI 生成に失敗: {}", e.getMessage());
+        return ResponseEntity.status(502).body(new ErrorResponse(502, e.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e) {
         Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()

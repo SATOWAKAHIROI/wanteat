@@ -29,6 +29,10 @@ spring:
 server:
   port: 8080
 
+ai:
+  model: ${AI_MODEL:claude-opus-5}
+  api-key: ${ANTHROPIC_API_KEY:}
+
 jwt:
   secret: ${JWT_SECRET:change-me-to-256-bit-secret-in-production-environment}
   expiration-ms: 3600000

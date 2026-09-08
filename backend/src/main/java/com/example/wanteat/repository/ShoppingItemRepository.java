@@ -9,7 +9,12 @@ import com.example.wanteat.domain.ShoppingItem;
 
 public interface ShoppingItemRepository extends JpaRepository<ShoppingItem, Long> {
 
-    List<ShoppingItem> findByUserIdAndMenuId(Long userId, Long menuId);
+    /** 買い物リストは献立由来と手動追加を区別せず、1つのリストとして扱う。 */
+    List<ShoppingItem> findByUserIdOrderBySortOrderAscIdAsc(Long userId);
 
-    Optional<ShoppingItem> findByIdAndUserIdAndMenuId(Long id, Long userId, Long menuId);
+    Optional<ShoppingItem> findByIdAndUserId(Long id, Long userId);
+
+    long deleteByUserIdAndCheckedTrue(Long userId);
+
+    long countByUserId(Long userId);
 }

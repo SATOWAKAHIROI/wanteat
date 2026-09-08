@@ -7,10 +7,15 @@ import com.example.wanteat.dto.ShoppingItemResponse;
 
 @Component
 public class ShoppingItemMapper {
-    public ShoppingItemResponse toShoppingItemResponse(ShoppingItem shoppingItem) {
-        ShoppingItemResponse shoppingItemResponse = new ShoppingItemResponse(shoppingItem.getName(),
-                shoppingItem.getAmount(), shoppingItem.getUnit(), shoppingItem.isChecked(),
+
+    public ShoppingItemResponse toResponse(ShoppingItem shoppingItem) {
+        return new ShoppingItemResponse(
+                shoppingItem.getId(),
+                shoppingItem.getMenuId(),
+                shoppingItem.getName(),
+                shoppingItem.getAmount(),
+                shoppingItem.getUnit(),
+                shoppingItem.isChecked(),
                 shoppingItem.getSortOrder());
-        return shoppingItemResponse;
     }
 }

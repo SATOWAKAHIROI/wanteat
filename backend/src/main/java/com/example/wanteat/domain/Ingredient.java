@@ -39,4 +39,8 @@ public class Ingredient {
     private String unit;
 
     private Integer sortOrder;
+
+    /** 水・塩・油など家に常備している材料。true なら買い物リストへ展開しない。 */
+    @Column(nullable = false)
+    private boolean pantryStaple;
 }

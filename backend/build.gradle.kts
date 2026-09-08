@@ -17,14 +17,19 @@ repositories {
     mavenCentral()
 }
 
+// Mockito のエージェントを自己アタッチではなく -javaagent で読み込むための構成
+val mockitoAgent: Configuration = configurations.create("mockitoAgent")
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-flyway")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    implementation("com.anthropic:anthropic-java:2.34.0")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -39,8 +44,14 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+    // JDK 21 以降はエージェントの自己アタッチが制限されるため明示的に指定する
+    val agent = configurations.named("mockitoAgent")
+    jvmArgumentProviders.add(CommandLineArgumentProvider {
+        listOf("-javaagent:${agent.get().asPath}")
+    })
 }
