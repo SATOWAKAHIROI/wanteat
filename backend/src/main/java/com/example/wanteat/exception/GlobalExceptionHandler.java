@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e) {
         Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()
-                .collect(Collectors.toMap(fe -> fe.getField(), fe -> fe.getDefaultMessage()));
+                .collect(Collectors.toMap(fe -> fe.getField(), fe -> fe.getDefaultMessage(), (existing, ignored) -> existing));
         return ResponseEntity.status(400).body(new ErrorResponse(400, "入力値が不正です", errors));
     }
 

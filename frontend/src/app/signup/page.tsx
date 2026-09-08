@@ -9,10 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -21,13 +22,15 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      await apiFetch("/api/auth/login", {
+      await apiFetch("/api/auth/signup", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, confirmPassword }),
       });
       router.push("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "ログインに失敗しました");
+      setError(
+        err instanceof Error ? err.message : "サインアップに失敗しました",
+      );
     } finally {
       setLoading(false);
     }
@@ -37,7 +40,7 @@ export default function LoginPage() {
     <main className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>ログイン</CardTitle>
+          <CardTitle>サインアップ</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -61,11 +64,21 @@ export default function LoginPage() {
                 required
               />
             </div>
+            <div className="space-y-1">
+              <Label htmlFor="password">パスワード確認用</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "ログイン中..." : "ログイン"}
+              {loading ? "サインアップ中..." : "サインアップ"}
             </Button>
-            <Link href="/signup">アカウント作成はこちら</Link>
+            <Link href="/login">アカウント作成はこちら</Link>
           </form>
         </CardContent>
       </Card>

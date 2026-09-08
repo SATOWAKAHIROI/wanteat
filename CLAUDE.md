@@ -172,6 +172,7 @@ python3 -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt(10, p
 - **全 API は自分のデータのみ操作できる**よう、Service 側で `findByIdAndUserId` 系を使う。他人のリソースは 404 を返す（403 ではない）
 - CSRF は無効。`/api/auth/**` のみ permitAll、それ以外は全て認証必須
 - CORS は `http://localhost:3000` のみ許可 + `allowCredentials(true)`
+- **`SecurityConfig#corsConfigurationSource` の `setAllowedMethods` は列挙式**。新しい HTTP メソッドを使う API を足したら必ずここも更新する。漏れるとプリフライトが 403 になり、ブラウザ側は `Failed to fetch`（HTTP エラーですらない）になって原因が分かりにくい
 - Cookie の `maxAge`(3600秒) と `jwt.expiration-ms`(3600000) は手動で揃えている。片方だけ変えないこと
 
 ## エラーレスポンス契約
