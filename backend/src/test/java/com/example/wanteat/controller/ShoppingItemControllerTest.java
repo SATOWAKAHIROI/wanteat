@@ -25,10 +25,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.example.wanteat.dto.ShoppingItemResponse;
 import com.example.wanteat.config.SecurityConfig;
 import com.example.wanteat.security.JwtAuthenticationFilter;
+import com.example.wanteat.security.TokenCookieFactory;
 import com.example.wanteat.service.JwtService;
 import com.example.wanteat.service.ShoppingItemService;
 
-@Import({ SecurityConfig.class, JwtAuthenticationFilter.class })
+@Import({ SecurityConfig.class, JwtAuthenticationFilter.class, TokenCookieFactory.class })
 @WebMvcTest(ShoppingItemController.class)
 class ShoppingItemControllerTest {
 

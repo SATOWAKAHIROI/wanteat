@@ -22,12 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.example.wanteat.dto.PreferenceResponse;
 import com.example.wanteat.config.SecurityConfig;
 import com.example.wanteat.security.JwtAuthenticationFilter;
+import com.example.wanteat.security.TokenCookieFactory;
 import com.example.wanteat.service.JwtService;
 import com.example.wanteat.service.UserPreferenceService;
 
 import tools.jackson.databind.ObjectMapper;
 
-@Import({ SecurityConfig.class, JwtAuthenticationFilter.class })
+@Import({ SecurityConfig.class, JwtAuthenticationFilter.class, TokenCookieFactory.class })
 @WebMvcTest(PreferenceController.class)
 class PreferenceControllerTest {
 

@@ -29,12 +29,26 @@ spring:
 server:
   port: 8080
 
+app:
+  cookie:
+    # 本番（HTTPS）では secure=true が必須。false のままだと Cookie が送信されずログインできない
+    secure: ${COOKIE_SECURE:false}
+    same-site: ${COOKIE_SAME_SITE:Lax}
+    # フロントと API でサブドメインが分かれる場合のみ指定する（例: .example.com）
+    domain: ${COOKIE_DOMAIN:}
+  cors:
+    # カンマ区切りで複数指定できる
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000}
+  signup:
+    # 空なら誰でも登録できる。値を設定すると招待コードが必須になる
+    invite-code: ${SIGNUP_INVITE_CODE:}
+
 ai:
   model: ${AI_MODEL:claude-opus-5}
   api-key: ${ANTHROPIC_API_KEY:}
 
 jwt:
-  secret: ${JWT_SECRET:change-me-to-256-bit-secret-in-production-environment}
+  secret: ${JWT_SECRET}   # 既定値なし。未設定だと起動に失敗する（本番で dev 値が使われる事故を防ぐ）
   expiration-ms: 2592000000
 
 logging:

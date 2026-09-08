@@ -28,6 +28,7 @@ import com.example.wanteat.dto.IngredientResponse;
 import com.example.wanteat.dto.MenuResponse;
 import com.example.wanteat.config.SecurityConfig;
 import com.example.wanteat.security.JwtAuthenticationFilter;
+import com.example.wanteat.security.TokenCookieFactory;
 import com.example.wanteat.dto.SuggestResponse;
 import com.example.wanteat.dto.SuggestedDish;
 import com.example.wanteat.exception.AiGenerationException;
@@ -36,7 +37,7 @@ import com.example.wanteat.service.JwtService;
 import com.example.wanteat.service.MenuConfirmService;
 import com.example.wanteat.service.MenuService;
 
-@Import({ SecurityConfig.class, JwtAuthenticationFilter.class })
+@Import({ SecurityConfig.class, JwtAuthenticationFilter.class, TokenCookieFactory.class })
 @WebMvcTest(MenuController.class)
 class MenuControllerTest {
 

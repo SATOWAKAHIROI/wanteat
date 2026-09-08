@@ -25,10 +25,11 @@ import com.example.wanteat.domain.RequestedBy;
 import com.example.wanteat.dto.RequestResponse;
 import com.example.wanteat.config.SecurityConfig;
 import com.example.wanteat.security.JwtAuthenticationFilter;
+import com.example.wanteat.security.TokenCookieFactory;
 import com.example.wanteat.service.JwtService;
 import com.example.wanteat.service.RequestService;
 
-@Import({ SecurityConfig.class, JwtAuthenticationFilter.class })
+@Import({ SecurityConfig.class, JwtAuthenticationFilter.class, TokenCookieFactory.class })
 @WebMvcTest(RequestController.class)
 class RequestControllerTest {
 

@@ -24,6 +24,7 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final TokenCookieFactory tokenCookieFactory;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -46,9 +47,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
         } catch (ExpiredJwtException e) {
-            ResponseCookie expired = ResponseCookie.from("token", "")
-                    .httpOnly(true).path("/").maxAge(0).sameSite("Lax").build();
-            response.addHeader(HttpHeaders.SET_COOKIE, expired.toString());
+            // 生成時と同じ属性でないとブラウザが Cookie を消してくれない
+            response.addHeader(HttpHeaders.SET_COOKIE, tokenCookieFactory.expired().toString());
         } catch (JwtException | IllegalArgumentException e) {
             logger.debug("JWT検証失敗: " + e.getMessage());
         }

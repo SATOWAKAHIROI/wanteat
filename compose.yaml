@@ -3,16 +3,17 @@ services:
     image: mysql:8.4
     container_name: wanteat-db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?.env に MYSQL_ROOT_PASSWORD を設定してください}
       MYSQL_DATABASE: wanteat
       MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?.env に MYSQL_PASSWORD を設定してください}
       TZ: Asia/Tokyo
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     ports:
-      - "3306:3306"
+      # ホストのループバックのみに公開する（LAN からは見えない）
+      - "127.0.0.1:3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
@@ -32,8 +33,13 @@ services:
       DB_PORT: "3306"
       DB_NAME: wanteat
       DB_USER: appuser
-      DB_PASSWORD: apppass
-      JWT_SECRET: dev-secret-key-please-change-in-production-env
+      DB_PASSWORD: ${MYSQL_PASSWORD:?.env に MYSQL_PASSWORD を設定してください}
+      JWT_SECRET: ${JWT_SECRET:?.env に JWT_SECRET を設定してください（openssl rand -base64 48）}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      COOKIE_SAME_SITE: ${COOKIE_SAME_SITE:-Lax}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      SIGNUP_INVITE_CODE: ${SIGNUP_INVITE_CODE:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       AI_MODEL: ${AI_MODEL:-claude-opus-5}
       GRADLE_USER_HOME: /workspace/.gradle-home
