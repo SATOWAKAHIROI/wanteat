@@ -78,7 +78,7 @@ export default function SignUpPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "サインアップ中..." : "サインアップ"}
             </Button>
-            <Link href="/login">アカウント作成はこちら</Link>
+            <Link href="/login">ログインはこちら</Link>
           </form>
         </CardContent>
       </Card>

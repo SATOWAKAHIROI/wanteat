@@ -9,8 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -24,7 +22,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
         String token = authService.login(request).token();
         ResponseCookie cookie = ResponseCookie.from("token", token)
-                .httpOnly(true).secure(false).path("/").maxAge(3600).sameSite("Lax").build();
+                .httpOnly(true).secure(false).path("/").maxAge(2592000).sameSite("Lax").build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
@@ -37,9 +35,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody @Valid SignUpRequest request) {
-        //TODO: process POST request
         String token = authService.signUp(request).token();
-        ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true).secure(false).path("/").maxAge(3600).sameSite("Lax").build();
+        ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true).secure(false).path("/").maxAge(2592000).sameSite("Lax").build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
     

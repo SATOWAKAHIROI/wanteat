@@ -35,7 +35,7 @@ ai:
 
 jwt:
   secret: ${JWT_SECRET:change-me-to-256-bit-secret-in-production-environment}
-  expiration-ms: 3600000
+  expiration-ms: 2592000000
 
 logging:
   level:
