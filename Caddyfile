@@ -1,0 +1,14 @@
+# DOMAIN が example.com のようなホスト名なら Let's Encrypt で HTTPS を自動取得する。
+# :80 のようなポート指定にすると平文 HTTP で待ち受ける（ローカル検証用）。
+{$DOMAIN} {
+	encode gzip
+
+	# API はバックエンドへ。フロントと同一オリジンになるので CORS が不要になる
+	handle /api/* {
+		reverse_proxy backend:8080
+	}
+
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
