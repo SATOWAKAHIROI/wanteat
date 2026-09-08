@@ -173,7 +173,23 @@ python3 -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt(10, p
 - CSRF は無効。`/api/auth/**` のみ permitAll、それ以外は全て認証必須
 - CORS は `http://localhost:3000` のみ許可 + `allowCredentials(true)`
 - **`SecurityConfig#corsConfigurationSource` の `setAllowedMethods` は列挙式**。新しい HTTP メソッドを使う API を足したら必ずここも更新する。漏れるとプリフライトが 403 になり、ブラウザ側は `Failed to fetch`（HTTP エラーですらない）になって原因が分かりにくい
-- Cookie の `maxAge`(3600秒) と `jwt.expiration-ms`(3600000) は手動で揃えている。片方だけ変えないこと
+- Cookie の `maxAge`(2592000秒 = 30日) と `jwt.expiration-ms`(2592000000) は手動で揃えている。**片方だけ変えても症状が出ないので注意**：Cookie だけ延ばしてもブラウザが送り続けるだけで、JWT が期限切れなら `JwtAuthenticationFilter` が認証情報を入れず 401 になり、結局ログアウトさせられる
+- **Cookie を作っている箇所は3つ**（`AuthController` のログイン / サインアップ / ログアウト）。有効期限を変えるときは全部を確認する。検証は実際にトークンを復号するのが確実
+
+```bash
+# 発行されたトークンの有効期間を確認する
+curl -s -c /tmp/c.txt -o /dev/null -X POST -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password"}' http://localhost:8080/api/auth/login
+python3 -c "
+import base64, json, datetime, subprocess
+tok = subprocess.check_output(['awk', '/token/ {print \$7}', '/tmp/c.txt']).decode().strip()
+p = tok.split('.')[1]; p += '=' * (-len(p) % 4)
+d = json.loads(base64.urlsafe_b64decode(p))
+print(datetime.datetime.fromtimestamp(d['exp']) - datetime.datetime.fromtimestamp(d['iat']))"
+```
+
+- **JWT はステートレスなので、ログアウトしてもサーバー側で失効させられない。** Cookie を消すだけ。有効期限を30日にしたことで、トークンが漏れた場合の影響範囲も30日になる。外部公開時はリフレッシュトークンや失効リストの導入を検討すること
+- **`application.yml` を変えても再起動しないと反映されない**（`docker compose restart backend`）。ソース変更と同じ
 
 ## エラーレスポンス契約
 
